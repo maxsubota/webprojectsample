@@ -43,6 +43,7 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Conne
             ConnectionPool connectionPool = ConnectionPoolFactory.getInstance()
                     .getConnectionPool();
 
+            //can be NPE here
             return creators.get(dtoClass)
                     .apply(connectionPool.retrieveConnection());
 
@@ -53,6 +54,7 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Conne
 
     @Override
     public GenericDao getTransactionalDao(Class dtoClass, Connection connection) {
+        //can be NPE here
         return creators.get(dtoClass)
                 .apply(connection);
     }

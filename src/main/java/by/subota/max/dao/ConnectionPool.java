@@ -7,6 +7,7 @@ import java.sql.Connection;
 /**
  * Connection Pool
  */
+//you can use standart pool https://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/impl/GenericObjectPool.html
 public interface ConnectionPool {
 
     /**
@@ -20,6 +21,7 @@ public interface ConnectionPool {
      * Put back connection after using
      * @param connection - connection
      */
+    //how this method is supposed to work?
     void putBackConnection(Connection connection);
 
     /**

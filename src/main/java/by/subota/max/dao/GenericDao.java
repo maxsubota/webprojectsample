@@ -32,6 +32,7 @@ public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
      * @param id id
      * @return identified entity
      * @throws PersistException should be clarify
+     * //maybe some other exception can be thrown here? like SQLException
      */
     T getByPK(PK id) throws PersistException;
 
@@ -54,5 +55,6 @@ public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
      * @return identified entity
      * @throws PersistException should be clarify
      */
+    //maybe some other exception type?
     List<T> getAll() throws PersistException;
 }

@@ -31,6 +31,8 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
 
     public abstract String getDeleteQuery();
 
+    //when connefction is supposed to be opened? On the first query?
+
     public AbstractJdbcDao(Connection connection) {
         this.connection = connection;
     }

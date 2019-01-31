@@ -14,6 +14,7 @@ public class ConnectionPoolImpl implements by.subota.max.dao.ConnectionPool {
     private ConnectionPoolImpl() {}
 
     public static synchronized ConnectionPool getInstance() {
+        //wrong impl of singleton, it's not thread safe. Think why
         if (instance == null) {
             instance = new ConnectionPoolImpl();
         }
