@@ -5,6 +5,9 @@ package by.subota.max.dao.exception;
  */
 public class ConnectionPoolException extends Exception {
 
+    ConnectionPoolException(String message, Throwable cause) {
+        super(message, cause);
+    }
     //provide your code here
 
 }

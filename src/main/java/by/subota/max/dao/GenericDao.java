@@ -1,9 +1,11 @@
 package by.subota.max.dao;
 
+import by.subota.max.dao.exception.DaoException;
 import by.subota.max.dao.exception.PersistException;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generic DAO
@@ -17,7 +19,7 @@ public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
      * @return new entity with Id in DB
      * @throws PersistException should be clarify
      */
-    T create() throws PersistException;
+    Optional<T> create() throws PersistException;
 
     /**
      * Save identified entity in DB
@@ -25,15 +27,15 @@ public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
      * @return identified entity in DB
      * @throws PersistException should be clarify
      */
-    T persist(T object) throws PersistException;
+    Optional<T> persist(T object) throws PersistException;
 
     /**
      * Get identified entity by PK
      * @param id id
      * @return identified entity
-     * @throws PersistException should be clarify
+     * @throws DaoException should be clarify
      */
-    T getByPK(PK id) throws PersistException;
+    Optional<T> getByPK(PK id) throws DaoException;
 
     /**
      * Update identified entity
@@ -52,7 +54,7 @@ public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
     /**
      * Get all identified entity
      * @return identified entity
-     * @throws PersistException should be clarify
+     * @throws DaoException should be clarify
      */
-    List<T> getAll() throws PersistException;
+    List<T> getAll() throws DaoException;
 }

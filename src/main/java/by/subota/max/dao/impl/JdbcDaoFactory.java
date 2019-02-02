@@ -5,24 +5,52 @@ import by.subota.max.dao.TransactionalDaoFactory;
 import by.subota.max.dao.GenericDao;
 import by.subota.max.dao.ConnectionPool;
 import by.subota.max.dao.ConnectionPoolFactory;
-import by.subota.max.dao.exception.ConnectionPoolException;
+import by.subota.max.dao.AbstractJdbcDao;
 import by.subota.max.dao.exception.DaoException;
 import by.subota.max.domain.User;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Jdbc DAO Factory
  */
 public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Connection> {
     private static volatile JdbcDaoFactory instance;
-    private Map<Class, Function<Connection, GenericDao>> creators;
+    private Map<Class, Supplier<GenericDao>> creators = new HashMap<>();
+
+    private class DaoInvocationHandler implements InvocationHandler {
+        private GenericDao dao;
+
+        DaoInvocationHandler(GenericDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
+            Connection connection = connectionPool.retrieveConnection();
+
+            setConnectionWithReflection(dao, connection);
+
+            Object result = method.invoke(dao, args);
+
+            connectionPool.putBackConnection(connection);
+            setConnectionWithReflection(dao, null);
+
+            return result;
+        }
+
+    }
 
     private JdbcDaoFactory() {
         creators.put(User.class, UserDaoImpl::new);
-
     }
 
     public static JdbcDaoFactory getInstance() {
@@ -38,22 +66,45 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Conne
     }
 
     @Override
-    public GenericDao getDao(Class dtoClass) throws DaoException {
-        try {
-            ConnectionPool connectionPool = ConnectionPoolFactory.getInstance()
-                    .getConnectionPool();
-
-            return creators.get(dtoClass)
-                    .apply(connectionPool.retrieveConnection());
-
-        } catch (ConnectionPoolException e) {
-            throw new DaoException("Failed to retrieve MySQL connection from ConnectionPoolImpl. ", e);
+    public GenericDao getDao(Class entityClass) throws DaoException {
+        Supplier<GenericDao> daoCreator = creators.get(entityClass);
+        if (daoCreator == null) {
+            throw new DaoException("DTO Class cannot be find");
         }
+        GenericDao dao = daoCreator.get();
+
+        return (GenericDao) Proxy.newProxyInstance(dao.getClass().getClassLoader(),
+                dao.getClass().getInterfaces(),
+                new DaoInvocationHandler(dao));
     }
 
     @Override
-    public GenericDao getTransactionalDao(Class dtoClass, Connection connection) {
-        return creators.get(dtoClass)
-                .apply(connection);
+    public GenericDao getTransactionalDao(Class dtoClass, Connection connection) throws DaoException {
+        Supplier<GenericDao> daoCreator = creators.get(dtoClass);
+        if (daoCreator == null) {
+            throw new DaoException("DTO Class cannot be find");
+        }
+        GenericDao dao = daoCreator.get();
+
+        setConnectionWithReflection(dao, connection);
+
+        return dao;
+    }
+
+    private void setConnectionWithReflection(Object dao, Connection connection) throws DaoException {
+        if (!(dao instanceof AbstractJdbcDao)) {
+            throw new DaoException("DAO implementation does not extend AbstractJdbcDao.");
+        }
+
+        try {
+            Field connectionField = AbstractJdbcDao.class.getDeclaredField("connection");
+            if (!connectionField.isAccessible()) {
+                connectionField.setAccessible(true);
+            }
+            connectionField.set(dao, connection);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new DaoException("Failed to set connection for transactional DAO. ", e);
+        }
     }
 }

@@ -1,23 +1,19 @@
 package by.subota.max.dao.impl;
 
 import by.subota.max.dao.AbstractJdbcDao;
+import by.subota.max.dao.GenericDao;
 import by.subota.max.dao.exception.PersistException;
 import by.subota.max.domain.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Example User DAO implementation
  */
-public class UserDaoImpl extends AbstractJdbcDao<User, Integer> {
-
-    UserDaoImpl(Connection connection) {
-        super(connection);
-    }
-
+public class UserDaoImpl extends AbstractJdbcDao<User, Integer> implements GenericDao<User, Integer> {
 
     @Override
     protected List<User> parseResultSet() {
@@ -83,9 +79,9 @@ public class UserDaoImpl extends AbstractJdbcDao<User, Integer> {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public User create() throws PersistException {
 
+    @Override
+    public Optional<User> create() throws PersistException {
         //provide your code here
 
         throw new UnsupportedOperationException();

@@ -7,7 +7,7 @@ import java.sql.Connection;
 /**
  * Implementation of transaction with DAO
  */
-public final class Transaction {
+public final class TransactionManager {
     private Connection connection;
 
     public void begin(GenericDao dao, GenericDao ... daos) {
@@ -37,6 +37,5 @@ public final class Transaction {
 
         throw new UnsupportedOperationException();
     }
-
 
 }

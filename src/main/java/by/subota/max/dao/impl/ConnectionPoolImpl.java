@@ -8,14 +8,18 @@ import java.sql.Connection;
 /**
  * Implementation of Connection Pool
  */
-public class ConnectionPoolImpl implements by.subota.max.dao.ConnectionPool {
-    private static ConnectionPool instance;
+public class ConnectionPoolImpl implements ConnectionPool {
+    private static volatile ConnectionPool instance;
 
     private ConnectionPoolImpl() {}
 
     public static synchronized ConnectionPool getInstance() {
         if (instance == null) {
-            instance = new ConnectionPoolImpl();
+            synchronized (ConnectionPoolImpl.class) {
+                if (instance == null) {
+                    instance = new ConnectionPoolImpl();
+                }
+            }
         }
 
         return instance;

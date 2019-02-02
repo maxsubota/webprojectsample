@@ -1,11 +1,13 @@
 package by.subota.max.dao;
 
+import by.subota.max.dao.exception.DaoException;
 import by.subota.max.dao.exception.PersistException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract JDBC DAO
@@ -13,7 +15,7 @@ import java.util.List;
  * @param <PK> - Type primary key of entity
  */
 public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Number> implements GenericDao<T, PK> {
-    private Connection connection;
+    protected Connection connection;
 
     protected abstract List<T> parseResultSet();
 
@@ -31,12 +33,16 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
 
     public abstract String getDeleteQuery();
 
-    public AbstractJdbcDao(Connection connection) {
-        this.connection = connection;
+    @Override
+    public Optional<T> getByPK(PK key) throws DaoException {
+
+        // Write your code here
+
+        return null;
     }
 
     @Override
-    public T getByPK(PK key) throws PersistException {
+    public List<T> getAll() throws DaoException {
 
         // Write your code here
 
@@ -44,15 +50,7 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     }
 
     @Override
-    public List<T> getAll() throws PersistException {
-
-        // Write your code here
-
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public T persist(T object) throws PersistException {
+    public Optional<T> persist(T object) throws PersistException {
 
         // Write your code here
 

@@ -9,5 +9,9 @@ public class DaoException extends Exception {
         super(message, cause);
     }
 
+    public DaoException(String message) {
+        super(message);
+    }
+
     //provide your code here
 }
