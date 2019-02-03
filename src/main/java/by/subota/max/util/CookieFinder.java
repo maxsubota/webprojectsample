@@ -4,6 +4,9 @@ import javax.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * Cookie finder
+ */
 public final class CookieFinder {
     private CookieFinder() {}
 

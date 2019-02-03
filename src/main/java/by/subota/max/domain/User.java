@@ -7,7 +7,7 @@ import lombok.Data;
 public class User implements Identified<Integer> {
     private int id;
     private String login;
-    private char[] password;
+    private String password;
     private String name;
 
     // Add your addition fields here...
