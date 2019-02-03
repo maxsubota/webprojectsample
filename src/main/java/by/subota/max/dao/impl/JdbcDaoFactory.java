@@ -69,7 +69,7 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Conne
     public GenericDao getDao(Class entityClass) throws DaoException {
         Supplier<GenericDao> daoCreator = creators.get(entityClass);
         if (daoCreator == null) {
-            throw new DaoException("DTO Class cannot be find");
+            throw new DaoException("Entity Class cannot be find");
         }
         GenericDao dao = daoCreator.get();
 
@@ -79,10 +79,10 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory<Conne
     }
 
     @Override
-    public GenericDao getTransactionalDao(Class dtoClass, Connection connection) throws DaoException {
-        Supplier<GenericDao> daoCreator = creators.get(dtoClass);
+    public GenericDao getTransactionalDao(Class entityClass, Connection connection) throws DaoException {
+        Supplier<GenericDao> daoCreator = creators.get(entityClass);
         if (daoCreator == null) {
-            throw new DaoException("DTO Class cannot be find");
+            throw new DaoException("Entity Class cannot be find");
         }
         GenericDao dao = daoCreator.get();
 
