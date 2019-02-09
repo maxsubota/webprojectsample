@@ -17,13 +17,11 @@ import java.util.Optional;
 public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Number> implements GenericDao<T, PK> {
     protected Connection connection;
 
-    protected abstract List<T> parseResultSet();
+    protected abstract List<T> parseResultSet(ResultSet rs) throws DaoException;
 
-    protected abstract List<T> parseResultSet(ResultSet rs) throws PersistException;
+    protected abstract void prepareStatementForInsert(PreparedStatement statement, T object) throws DaoException;
 
-    protected abstract void prepareStatementForInsert(PreparedStatement statement, T object) throws PersistException;
-
-    protected abstract void prepareStatementForUpdate(PreparedStatement statement, T object) throws PersistException;
+    protected abstract void prepareStatementForUpdate(PreparedStatement statement, T object) throws DaoException;
 
     public abstract String getSelectQuery();
 

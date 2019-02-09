@@ -2,6 +2,7 @@ package by.subota.max.dao.impl;
 
 import by.subota.max.dao.AbstractJdbcDao;
 import by.subota.max.dao.GenericDao;
+import by.subota.max.dao.exception.DaoException;
 import by.subota.max.dao.exception.PersistException;
 import by.subota.max.domain.User;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class UserDaoImpl extends AbstractJdbcDao<User, Integer> implements GenericDao<User, Integer> {
 
     @Override
-    protected List<User> parseResultSet() {
+    protected List<User> parseResultSet(ResultSet rs) throws DaoException {
 
         //provide your code here
 
@@ -24,7 +25,7 @@ public class UserDaoImpl extends AbstractJdbcDao<User, Integer> implements Gener
     }
 
     @Override
-    protected List<User> parseResultSet(ResultSet rs) throws PersistException {
+    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws DaoException {
 
         //provide your code here
 
@@ -32,15 +33,7 @@ public class UserDaoImpl extends AbstractJdbcDao<User, Integer> implements Gener
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, User object) throws PersistException {
-
-        //provide your code here
-
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, User object) throws PersistException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, User object) throws DaoException {
 
         //provide your code here
 
