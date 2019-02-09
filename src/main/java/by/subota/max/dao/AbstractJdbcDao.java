@@ -6,6 +6,7 @@ import by.subota.max.dao.exception.PersistException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,11 @@ import java.util.Optional;
 public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Number> implements GenericDao<T, PK> {
     protected Connection connection;
 
-    protected abstract List<T> parseResultSet(ResultSet rs) throws DaoException;
+    protected abstract List<T> parseResultSet(ResultSet rs) throws SQLException;
 
-    protected abstract void prepareStatementForInsert(PreparedStatement statement, T object) throws DaoException;
+    protected abstract void prepareStatementForInsert(PreparedStatement statement, T object) throws SQLException;
 
-    protected abstract void prepareStatementForUpdate(PreparedStatement statement, T object) throws DaoException;
+    protected abstract void prepareStatementForUpdate(PreparedStatement statement, T object) throws SQLException;
 
     public abstract String getSelectQuery();
 
