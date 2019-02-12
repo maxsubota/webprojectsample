@@ -2,17 +2,17 @@ package by.subota.max.dao;
 
 import by.subota.max.dao.exception.DaoException;
 
+import java.io.Serializable;
+
 /**
  * Transactional DAO Factory
- * @param <T>
  */
-public interface TransactionalDaoFactory<T> {
+public interface TransactionalDaoFactory {
     /**
      * Get generic DAO of entity without connection
      * @param entityClass
-     * @param connection
-     * @return
+     * @return transactional DAO
      * @throws DaoException should be clarify
      */
-    GenericDao getTransactionalDao(Class entityClass, T connection) throws DaoException;
+    <T extends Identified<PK>, PK extends Serializable> GenericDao getTransactionalDao(Class<T> entityClass) throws DaoException;
 }

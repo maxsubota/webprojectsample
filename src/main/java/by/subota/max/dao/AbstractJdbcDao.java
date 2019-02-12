@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Abstract JDBC DAO
@@ -33,7 +32,8 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     public abstract String getDeleteQuery();
 
     @Override
-    public Optional<T> getByPK(PK key) throws DaoException {
+    @AutoConnection
+    public T getByPK(PK key) throws DaoException {
 
         // Write your code here
 
@@ -41,6 +41,7 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     }
 
     @Override
+    @AutoConnection
     public List<T> getAll() throws DaoException {
 
         // Write your code here
@@ -49,7 +50,8 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     }
 
     @Override
-    public Optional<T> persist(T object) throws PersistException {
+    @AutoConnection
+    public T persist(T object) throws PersistException {
 
         // Write your code here
 
@@ -57,6 +59,7 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     }
 
     @Override
+    @AutoConnection
     public void update(T object) throws PersistException {
 
         // Write your code here
@@ -65,6 +68,7 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
     }
 
     @Override
+    @AutoConnection
     public void delete(T object) throws PersistException {
 
         // Write your code here
