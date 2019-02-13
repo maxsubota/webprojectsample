@@ -18,13 +18,16 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 /**
  * Jdbc DAO Factory
  */
 public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory {
-    private static volatile JdbcDaoFactory instance;
+    private static JdbcDaoFactory instance;
+    private static Lock lock = new ReentrantLock();
     private Map<Class, Supplier<GenericDao>> creators = new HashMap<>();
 
     private class DaoInvocationHandler implements InvocationHandler {
@@ -67,12 +70,14 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory {
     }
 
     public static JdbcDaoFactory getInstance() {
-        if (instance == null) {
-            synchronized (JdbcDaoFactory.class) {
-                if (instance == null) {
-                    instance = new JdbcDaoFactory();
-                }
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new JdbcDaoFactory();
             }
+
+        } finally {
+            lock.unlock();
         }
 
         return instance;

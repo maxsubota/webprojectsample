@@ -4,22 +4,27 @@ import by.subota.max.dao.ConnectionPool;
 import by.subota.max.dao.exception.ConnectionPoolException;
 
 import java.sql.Connection;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Implementation of Connection Pool
  */
 public class ConnectionPoolImpl implements ConnectionPool {
-    private static volatile ConnectionPool instance;
+    private static ConnectionPool instance;
+    private static Lock lock = new ReentrantLock();
 
     private ConnectionPoolImpl() {}
 
     public static synchronized ConnectionPool getInstance() {
-        if (instance == null) {
-            synchronized (ConnectionPoolImpl.class) {
-                if (instance == null) {
-                    instance = new ConnectionPoolImpl();
-                }
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new ConnectionPoolImpl();
             }
+
+        } finally {
+            lock.unlock();
         }
 
         return instance;

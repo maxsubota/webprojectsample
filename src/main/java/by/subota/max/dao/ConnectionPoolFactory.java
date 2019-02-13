@@ -2,21 +2,27 @@ package by.subota.max.dao;
 
 import by.subota.max.dao.impl.ConnectionPoolImpl;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Connection Pool Factory
  */
 public class ConnectionPoolFactory {
-    private static volatile ConnectionPoolFactory instance;
+    private static ConnectionPoolFactory instance;
+    private static Lock lock = new ReentrantLock();
 
     private ConnectionPoolFactory() {}
 
     public static ConnectionPoolFactory getInstance() {
-        if (instance == null) {
-            synchronized (ConnectionPoolFactory.class) {
-                if (instance == null) {
-                    instance = new ConnectionPoolFactory();
-                }
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new ConnectionPoolFactory();
             }
+
+        } finally {
+            lock.unlock();
         }
 
         return instance;

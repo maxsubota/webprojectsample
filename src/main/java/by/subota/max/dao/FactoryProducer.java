@@ -1,21 +1,28 @@
 package by.subota.max.dao;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Factory producer
  * Provide DAO Factory by type
  */
 public class FactoryProducer {
-    private static volatile FactoryProducer instance;
+    private static FactoryProducer instance;
+    private static Lock lock = new ReentrantLock();
     private FactoryProducer() {}
 
-    public FactoryProducer getInstance() {
-        if (instance == null) {
-            synchronized (FactoryProducer.class) {
-                if (instance == null) {
-                    instance = new FactoryProducer();
-                }
+    public static FactoryProducer getInstance() {
+        lock.lock();
+        try {
+            if (instance == null) {
+                instance = new FactoryProducer();
             }
+
+        } finally {
+            lock.unlock();
         }
+
         return instance;
     }
 
