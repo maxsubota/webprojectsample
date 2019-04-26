@@ -1,7 +1,7 @@
 package by.subota.max.controller;
 
-import by.subota.max.controller.command.Command;
-import by.subota.max.controller.command.CommandProvider;
+import by.subota.max.command.Command;
+import by.subota.max.command.CommandProvider;
 import by.subota.max.dto.ResponseContent;
 
 import javax.servlet.ServletException;

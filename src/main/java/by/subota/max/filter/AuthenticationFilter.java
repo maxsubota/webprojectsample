@@ -1,8 +1,4 @@
-package by.subota.max.controller.filter;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package by.subota.max.filter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;

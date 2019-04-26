@@ -1,4 +1,4 @@
-package by.subota.max.controller.listener;
+package by.subota.max.listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

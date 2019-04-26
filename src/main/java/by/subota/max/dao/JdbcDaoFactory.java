@@ -1,13 +1,7 @@
-package by.subota.max.dao.impl;
+package by.subota.max.dao;
 
-import by.subota.max.dao.DaoFactory;
-import by.subota.max.dao.TransactionalDaoFactory;
-import by.subota.max.dao.GenericDao;
-import by.subota.max.dao.ConnectionPool;
-import by.subota.max.dao.AutoConnection;
-import by.subota.max.dao.ConnectionPoolFactory;
-import by.subota.max.dao.Identified;
 import by.subota.max.dao.exception.DaoException;
+import by.subota.max.dao.impl.UserDaoImpl;
 import by.subota.max.domain.User;
 
 import java.io.Serializable;
@@ -26,8 +20,8 @@ import java.util.function.Supplier;
  * Jdbc DAO Factory
  */
 public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory {
+    private static final Lock lock = new ReentrantLock();
     private static JdbcDaoFactory instance;
-    private static Lock lock = new ReentrantLock();
     private Map<Class, Supplier<GenericDao>> creators = new HashMap<>();
 
     private class DaoInvocationHandler implements InvocationHandler {
@@ -49,12 +43,13 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory {
                 ConnectionPool connectionPool = ConnectionPoolFactory.getInstance().getConnectionPool();
                 Connection connection = connectionPool.retrieveConnection();
 
-                TransactionManager.setConnectionWithReflection(dao, connection);
+                ((AbstractJdbcDao)dao).setConnection(connection);
 
                 result = method.invoke(dao, args);
 
                 connectionPool.putBackConnection(connection);
-                TransactionManager.setConnectionWithReflection(dao, null);
+
+                ((AbstractJdbcDao)dao).setConnection(null);
 
             } else {
                 result = method.invoke(dao, args);
@@ -91,7 +86,7 @@ public class JdbcDaoFactory implements DaoFactory, TransactionalDaoFactory {
         }
         GenericDao dao = daoCreator.get();
 
-        return (GenericDao) Proxy.newProxyInstance(dao.getClass().getClassLoader(),
+        return (GenericDao<T, PK>) Proxy.newProxyInstance(dao.getClass().getClassLoader(),
                 dao.getClass().getInterfaces(),
                 new DaoInvocationHandler(dao));
     }

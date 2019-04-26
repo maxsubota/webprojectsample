@@ -1,6 +1,6 @@
 package by.subota.max.dto;
 
-import by.subota.max.controller.command.Router;
+import by.subota.max.command.Router;
 
 /**
  * Provide response content to View layer

@@ -17,8 +17,6 @@ public class UserDaoImpl extends AbstractJdbcDao<User, Integer> implements Gener
     @Override
     protected List<User> parseResultSet(ResultSet rs) throws SQLException {
 
-        //provide your code here
-
         throw new UnsupportedOperationException();
     }
 

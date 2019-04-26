@@ -1,13 +1,9 @@
-package by.subota.max.dao.impl;
+package by.subota.max.dao;
 
-import by.subota.max.dao.AbstractJdbcDao;
-import by.subota.max.dao.ConnectionPool;
-import by.subota.max.dao.ConnectionPoolFactory;
-import by.subota.max.dao.GenericDao;
+
 import by.subota.max.dao.exception.ConnectionPoolException;
 import by.subota.max.dao.exception.DaoException;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 
 /**
@@ -22,7 +18,8 @@ public final class TransactionManager {
 
         try {
             proxyConnection = connectionPool.retrieveConnection();
-            setConnectionWithReflection(dao, proxyConnection);
+
+            ((AbstractJdbcDao)dao).setConnection(proxyConnection);
 
         } catch (ConnectionPoolException e) {
             throw new DaoException("Failed to get a connection from CP.", e);
@@ -53,25 +50,4 @@ public final class TransactionManager {
 
         throw new UnsupportedOperationException();
     }
-
-
-    static void setConnectionWithReflection(Object dao, Connection connection) throws DaoException {
-        if (!(dao instanceof AbstractJdbcDao)) {
-            throw new DaoException("DAO implementation does not extend AbstractJdbcDao.");
-        }
-
-        try {
-
-            Field connectionField = AbstractJdbcDao.class.getDeclaredField("connection");
-            if (!connectionField.isAccessible()) {
-                connectionField.setAccessible(true);
-            }
-
-            connectionField.set(dao, connection);
-
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new DaoException("Failed to set connection for transactional DAO. ", e);
-        }
-    }
-
 }

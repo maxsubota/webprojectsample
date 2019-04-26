@@ -75,4 +75,8 @@ public abstract class AbstractJdbcDao<T extends Identified<PK>, PK extends Numbe
 
         throw new UnsupportedOperationException();
     }
+
+    void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 }

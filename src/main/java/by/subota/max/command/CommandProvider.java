@@ -1,4 +1,4 @@
-package by.subota.max.controller.command;
+package by.subota.max.command;
 
 import java.util.HashMap;
 import java.util.Map;
